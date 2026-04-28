@@ -1,4 +1,4 @@
-// @mukundakatta/agentbench — cost and latency tracking for AI agent runs.
+// @mukundakatta/agenttrace — cost and latency tracking for AI agent runs.
 //
 // Zero-deps, sync default-priced. Wrap an LLM call (or any tool call) with
 // `bench.measure(name, fn)`; results aggregate into a Run that you can
