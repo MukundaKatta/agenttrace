@@ -1,0 +1,48 @@
+{
+  "name": "@mukundakatta/agenttrace",
+  "version": "0.1.0",
+  "description": "Cost and latency tracking for AI agent runs. Wrap your LLM call, get a per-step + per-run breakdown that you can ship to a logger or dashboard.",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test 'test/**/*.test.js'",
+    "test:examples": "node examples/demo.js",
+    "lint": "node --check src/index.js test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "agent",
+    "ai",
+    "llm",
+    "benchmark",
+    "cost",
+    "latency",
+    "tracking",
+    "anthropic",
+    "openai"
+  ],
+  "author": "Mukunda Katta <mukunda.vjcs6@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/MukundaKatta/agenttrace",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MukundaKatta/agenttrace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MukundaKatta/agenttrace/issues"
+  }
+}
