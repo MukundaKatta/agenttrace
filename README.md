@@ -1,17 +1,19 @@
 # @mukundakatta/agenttrace
 
-[![npm version](https://img.shields.io/npm/v/@mukundakatta/agenttrace.svg)](https://www.npmjs.com/package/@mukundakatta/agenttrace)
-[![npm downloads](https://img.shields.io/npm/dm/@mukundakatta/agenttrace.svg)](https://www.npmjs.com/package/@mukundakatta/agenttrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Node](https://img.shields.io/node/v/@mukundakatta/agenttrace.svg)](https://nodejs.org)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
 [![Tests](https://img.shields.io/badge/tests-26%2F26-brightgreen.svg)](./test)
+
+> **Not yet published to npm.** Install directly from GitHub until v0.1.0 ships:
+> `npm install github:MukundaKatta/agenttrace`. The npm-version and downloads
+> badges will return once the first npm release lands.
 
 Cost and latency tracking for AI agent runs. Wrap your LLM call, get a per-step + per-run breakdown that you can ship to a logger, dashboard, or post-mortem.
 
 Zero dependencies. Async-context aware (steps inside `withRun` attach automatically). Built-in pricing for Anthropic, OpenAI, Google, xAI, and free-tier providers (Groq, Cerebras, Ollama, OpenRouter).
 
 ```sh
-npm install @mukundakatta/agenttrace
+npm install github:MukundaKatta/agenttrace
 ```
 
 ## Why
