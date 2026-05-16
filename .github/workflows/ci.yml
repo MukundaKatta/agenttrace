@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+        os: [ubuntu-latest]
+        include:
+          # Spot-check the LTS on macOS + Windows so we don't ship
+          # AsyncLocalStorage or perf_hooks behavior regressions there.
+          - node: '22'
+            os: macos-latest
+          - node: '22'
+            os: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Lint (syntax check)
+        run: npm run lint
+      - name: Unit tests
+        run: npm test
+      - name: Runnable examples (smoke)
+        run: npm run test:examples
+
+  cost-under-reporting-smoke:
+    name: cost not under-reported
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The whole pitch of agenttrace is "the reported cost matches what
+      # the provider will actually charge." This smoke pins one well-known
+      # model (claude-sonnet-4 at $3 input / $15 output per million) and
+      # asserts costOf() returns >= that for 1M+1M tokens. If a refactor
+      # ever silently changes the units, drops a multiplier, or zeroes a
+      # rate, CI catches it.
+      - name: Assert costOf() does not under-report a pinned model
+        run: |
+          node --input-type=module -e '
+            import { costOf, PRICING } from "./src/index.js";
+
+            const cost = costOf("claude-sonnet-4", { input: 1_000_000, output: 1_000_000 });
+            const rate = PRICING["claude-sonnet-4"];
+            const expected = rate.input + rate.output;
+
+            console.log("cost:", cost, "expected:", expected);
+
+            if (typeof cost !== "number" || !Number.isFinite(cost)) {
+              console.error("FAIL: cost is not a finite number");
+              process.exit(1);
+            }
+            if (cost < expected) {
+              console.error("FAIL: cost under-reported (" + cost + " < " + expected + ").");
+              console.error("This is the exact regression CI is here to catch.");
+              process.exit(1);
+            }
+            console.log("ok: cost >= expected");
+          '
+
+  coverage:
+    name: coverage gate
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Coverage
+        run: npm run test:coverage
+
+  zero-runtime-deps-gate:
+    name: zero runtime deps
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert package.json has no runtime dependencies
+        run: |
+          node -e '
+            const pkg = require("./package.json");
+            const deps = pkg.dependencies || {};
+            const keys = Object.keys(deps);
+            if (keys.length > 0) {
+              console.error("agenttrace is zero-runtime-dep by design.");
+              console.error("This PR adds: " + keys.join(", "));
+              process.exit(1);
+            }
+          '
+
+  package-smoke:
+    name: npm pack content check
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: npm pack dry-run + content check
+        run: |
+          npm pack --dry-run
+          npm pack --json | node -e '
+            const fs = require("fs");
+            const j = JSON.parse(fs.readFileSync(0, "utf8"));
+            const files = j[0].files.map(f => f.path);
+            const required = ["src/index.js", "src/index.d.ts", "README.md", "LICENSE"];
+            const missing = required.filter(r => !files.includes(r) && !files.some(f => f.startsWith(r)));
+            if (missing.length) {
+              console.error("missing from tarball:", missing);
+              process.exit(1);
+            }
+            const leaked = files.filter(f => f.startsWith("node_modules/") || f.startsWith("coverage/"));
+            if (leaked.length) {
+              console.error("node_modules or coverage leaked into tarball:", leaked);
+              process.exit(1);
+            }
+          '

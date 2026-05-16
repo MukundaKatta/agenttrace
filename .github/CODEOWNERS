@@ -1,0 +1,9 @@
+# Default owner for everything in this repo. Used by GitHub to auto-request
+# review on PRs and to define the contact point for security disclosures.
+* @MukundaKatta
+
+# Cost calculation + per-run aggregation. Bugs here either silently
+# under-report cost (caller thinks they spent $5, they spent $50) or
+# corrupt the PRICING table for the rest of the process. Worth extra
+# scrutiny.
+/src/index.js  @MukundaKatta

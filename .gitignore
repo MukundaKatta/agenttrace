@@ -1,7 +1,15 @@
 node_modules/
-coverage/
-dist/
-build/
+*.log
+.DS_Store
 .env
 .env.*
-.DS_Store
+coverage/
+.nyc_output/
+dist/
+build/
+*.tgz
+.idea/
+.vscode/
+
+# OS junk
+Thumbs.db
