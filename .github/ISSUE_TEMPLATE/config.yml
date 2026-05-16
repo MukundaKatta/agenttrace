@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔴 Cost under-reporting / PRICING-table corruption (security)
+    url: https://github.com/MukundaKatta/agenttrace/security/advisories/new
+    about: If you found a (model, usage) where the reported cost is lower than the provider's actual price, or a way to corrupt PRICING across consumers in the same process, use private vulnerability reporting.
+  - name: General security policy
+    url: https://github.com/MukundaKatta/agenttrace/blob/main/SECURITY.md
+    about: Full threat-model scope and disclosure timeline.
+  - name: Stale provider pricing
+    url: https://github.com/MukundaKatta/agenttrace#pricing
+    about: PRICING is a starter table — for up-to-the-minute accuracy, override via setPricing() in your application.
+  - name: Other agent-stack libraries
+    url: https://github.com/MukundaKatta/agent-stack
+    about: For agentsnap / agentguard / agentcast / agentfit / agentvet / agentbudget, the canonical landing page lists all six.
