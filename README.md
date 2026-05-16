@@ -1,8 +1,10 @@
 # @mukundakatta/agenttrace
 
+[![CI](https://github.com/MukundaKatta/agenttrace/actions/workflows/ci.yml/badge.svg)](https://github.com/MukundaKatta/agenttrace/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
 [![Tests](https://img.shields.io/badge/tests-26%2F26-brightgreen.svg)](./test)
+[![runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)](./package.json)
 
 > **Not yet published to npm.** Install directly from GitHub until v0.1.0 ships:
 > `npm install github:MukundaKatta/agenttrace`. The npm-version and downloads
