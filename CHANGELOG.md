@@ -4,6 +4,9 @@
 
 Production-polish branch (this PR): adds `SECURITY.md` (with cost-under-reporting / PRICING-mutation / numeric-overflow surfaces called out), `CODE_OF_CONDUCT.md`, `CODEOWNERS`, Dependabot config, issue + PR templates, release workflow with npm provenance OIDC + zero-deps gate, full CI (this repo had no GH Actions before — adds Node 20/22/24 matrix on Ubuntu plus macOS + Windows spot-checks, coverage gate, cost-under-reporting smoke, `npm pack` content check, zero-runtime-deps gate). Hygiene: untracks `node_modules/` and `coverage/` that leaked into the v0.1.0 tree. No source changes.
 
+### Fixed
+- Rename the test file `test/agentbench.test.js` to `test/agenttrace.test.js`, the last leftover from the original `agentbench` -> `agenttrace` project rename. Test suite stays 26/26 green (the `node --test test/*.test.js` glob is unaffected).
+
 ## [0.1.0] — 2026-04-28
 
 Initial release. Sixth in the @mukundakatta agent-stack
